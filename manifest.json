@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Prewall Reader",
+  "version": "0.1.0",
+  "description": "Snapshot article text + images before soft paywalls cover them. Opens a clean reader tab.",
+  "minimum_chrome_version": "102",
+  "permissions": ["storage", "scripting", "webNavigation"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Open Prewall Reader"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/Readability.js", "lib/Turndown.js", "content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

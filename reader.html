@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prewall Reader</title>
+<link rel="stylesheet" href="reader.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div>
+      <h1 id="title">Loading…</h1>
+      <div id="meta" class="meta"></div>
+    </div>
+    <div class="actions">
+      <button id="dl-md" disabled>↓ .md</button>
+      <button id="dl-html" disabled>↓ .html</button>
+      <button id="copy" disabled>Copy</button>
+      <a id="orig" href="#" target="_blank" rel="noopener noreferrer">Original</a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <div id="status" class="status">Loading snapshot…</div>
+  <section id="images" class="images" hidden></section>
+  <article id="article" class="article"></article>
+</main>
+<script src="lib/purify.min.js"></script>
+<script src="reader.js"></script>
+</body>
+</html>
