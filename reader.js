@@ -111,13 +111,25 @@ async function main() {
       el.removeAttribute("srcset");
       if (tag === "IMG") el.setAttribute("loading", "lazy");
     });
-    // harden links: http(s) only + noopener/noreferrer
-    articleEl.querySelectorAll("a").forEach((a) => {
+    // harden links: http(s) only + noopener/noreferrer, no tracking pings / forced downloads
+    articleEl.querySelectorAll("a, area").forEach((a) => {
       const href = a.getAttribute("href");
       const safe = href ? safeHttpUrl(href, pageBase) : null;
       if (!safe) { a.removeAttribute("href"); }
       else { a.href = safe; a.target = "_blank"; a.rel = "noopener noreferrer"; }
+      a.removeAttribute("ping");
+      a.removeAttribute("download");
     });
+    // forms: validate action, strip formaction overrides (phish hardening)
+    articleEl.querySelectorAll("form").forEach((f) => {
+      const act = f.getAttribute("action");
+      if (act) {
+        const safe = safeHttpUrl(act, pageBase);
+        if (!safe) f.removeAttribute("action");
+        else f.setAttribute("action", safe);
+      }
+    });
+    articleEl.querySelectorAll("[formaction]").forEach((el) => el.removeAttribute("formaction"));
     finalHtml = articleEl.innerHTML;
   } catch {
     clean = "";
@@ -139,9 +151,10 @@ async function main() {
       const a = document.createElement("a");
       a.href = src; a.target = "_blank"; a.rel = "noopener noreferrer";
       const img = document.createElement("img");
-      img.loading = "lazy"; img.src = src; img.alt = im.alt || "";
+      img.loading = "lazy"; img.alt = im.alt || "";
       img.onerror = () => { fig.remove(); pending = Math.max(0, pending - 1); shown = Math.max(0, shown - 1); maybeDone(); };
       img.onload = () => { pending = Math.max(0, pending - 1); maybeDone(); };
+      img.src = src;
       a.appendChild(img);
       fig.appendChild(a);
       if (im.alt) {

@@ -119,7 +119,7 @@
       const s = String(u).trim();
       if (!s || s.startsWith("blob:") || s.startsWith("javascript:") || s.startsWith("data:")) return null;
       const a = new URL(s, location.href).href;
-      return a.startsWith("http") ? a : null;
+      return (a.startsWith("http://") || a.startsWith("https://")) ? a : null;
     } catch { return null; }
   }
 
